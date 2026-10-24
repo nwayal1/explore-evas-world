@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Explore World – Kids</title>
+<style>
+:root{--bg:#fff7d6;--bg2:#d9f3ff;--card:#fff;--ink:#2b2350;--mute:#6a5f94;--p:#7c4dff;--o:#ff7a2f;--g:#22c55e;--pk:#ff4f9a;--b:#1e9bff;--line:#2b2350;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#241a4d;--bg2:#12304d;--card:#33286b;--ink:#fff7d6;--mute:#c9bff5;--line:#fff7d6}}
+:root[data-theme="dark"]{--bg:#241a4d;--bg2:#12304d;--card:#33286b;--ink:#fff7d6;--mute:#c9bff5;--line:#fff7d6}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(160deg,var(--bg),var(--bg2));background-attachment:fixed;color:var(--ink);font-family:"Comic Sans MS","Chalkboard SE","Comic Neue","Trebuchet MS",sans-serif;min-height:100vh}
+.view{display:none;max-width:1250px;margin:0 auto;padding:20px 16px 50px}
+.view.on{display:block}
+h1,h2{margin:0}
+.hero{text-align:center;padding:26px 0 4px}
+.globe{font-size:84px;display:inline-block;animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-12px) rotate(8deg)}}
+h1{font-size:clamp(40px,9vw,84px);color:var(--p);text-shadow:3px 3px 0 var(--o)}
+h2{font-size:clamp(28px,5vw,46px);color:var(--p)}
+.sub{font-size:20px;color:var(--mute);margin:6px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:18px;margin-top:20px}
+.tile{border:4px solid var(--line);border-radius:28px;padding:22px;cursor:pointer;font:inherit;font-size:24px;font-weight:700;color:#fff;text-align:center;box-shadow:0 7px 0 var(--line);transition:transform .15s}
+.tile:hover{transform:translateY(-5px) rotate(-1deg)}
+.tile:active{transform:translateY(4px);box-shadow:0 2px 0 var(--line)}
+.tile .e{font-size:64px;display:block;margin-bottom:6px}
+.tile small{display:block;font-weight:400;font-size:15px;margin-top:6px}
+.tile:nth-child(6n+1){background:var(--p)}.tile:nth-child(6n+2){background:var(--o)}.tile:nth-child(6n+3){background:var(--g)}.tile:nth-child(6n+4){background:var(--pk)}.tile:nth-child(6n+5){background:var(--b)}.tile:nth-child(6n){background:#f5a400}
+.home3{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));max-width:980px;margin:24px auto 0}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.back,select,input{font:inherit;font-size:17px;border:3px solid var(--line);border-radius:22px;padding:8px 16px;background:var(--card);color:var(--ink);cursor:pointer}
+.wrap{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}
+.wrap.in{grid-template-columns:240px 1fr 1fr}
+.side{background:var(--card);border:4px solid var(--line);border-radius:24px;padding:10px;max-height:calc(100vh - 110px);overflow:auto;position:sticky;top:10px}
+.side input{width:100%;margin-bottom:8px;cursor:text}
+.it{display:flex;gap:10px;align-items:center;width:100%;font:inherit;font-size:17px;background:none;border:0;border-radius:14px;padding:8px 10px;color:var(--ink);cursor:pointer;text-align:left}
+.it:hover{background:var(--bg)}
+.it.on{background:var(--o);color:#fff;font-weight:700}
+.it .f{font-size:28px}
+.main,.mapbox{background:var(--card);border:4px solid var(--line);border-radius:30px;padding:22px 14px;text-align:center;min-height:440px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;box-shadow:0 8px 0 var(--line)}
+.main{cursor:pointer}
+.big{font-size:clamp(110px,22vw,240px);line-height:1.05;animation:pop .4s}
+@keyframes pop{from{transform:scale(.5) rotate(-10deg);opacity:0}}
+.nm{font-size:clamp(34px,6vw,70px);font-weight:800;margin:0;color:var(--p)}
+.lbl{color:var(--mute);font-size:18px;margin-top:10px}
+.cap{font-size:clamp(30px,5.5vw,58px);font-weight:800;color:var(--o);margin:0}
+.rom{font-size:26px;color:var(--b);margin:0;font-weight:700}
+.mean{font-size:20px;color:var(--mute);margin:4px 0 0}
+.hint{margin-top:8px;color:var(--mute);font-size:12px;opacity:.7}
+.spk{background:var(--g);color:#fff;border:3px solid var(--line);border-radius:30px;font:inherit;font-size:22px;font-weight:700;padding:8px 22px;cursor:pointer;margin-top:8px}
+.note{color:var(--mute);font-size:20px;max-width:460px}
+.btn{font:inherit;background:var(--o);color:#fff;border:3px solid var(--line);border-radius:30px;padding:12px 24px;font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 5px 0 var(--line)}
+.btn.o{background:var(--p)}
+.ctl{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:18px}
+.fcard{max-width:700px;margin:14px auto 0;min-height:420px}
+.word{font-size:clamp(64px,17vw,170px);font-weight:800;color:var(--p);line-height:1.15;word-break:break-word;margin:0;animation:pop .35s}
+.prog{max-width:560px;margin:8px auto;height:14px;background:var(--card);border:3px solid var(--line);border-radius:10px;overflow:hidden}
+.prog div{height:100%;background:var(--g);transition:width .3s}
+#jump{width:90px;cursor:text}
+svg{width:100%;max-width:420px;height:auto}
+.land{fill:#9be28c;stroke:#2b2350;stroke-width:3;stroke-linejoin:round}
+.dot{fill:#7c4dff;opacity:.45}
+.pin{fill:#ff4f9a;stroke:#fff;stroke-width:3}
+.pulse{fill:#ff4f9a;opacity:.4;animation:pl 1.2s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pl{to{transform:scale(2.6);opacity:0}}
+#flash{padding-top:8px}
+#flash h2{font-size:14px!important;margin:0}
+#flash .sub{font-size:12px!important;margin:2px 0}
+#flash .prog{height:6px;border-width:2px;margin:4px auto;max-width:100%}
+#flash .back,#flash .btn,#flash input{font-size:12px;padding:4px 10px;border-width:2px;box-shadow:none}
+#flash .bar{margin-bottom:2px}
+#flash .ctl{margin-top:6px;font-size:12px}
+#flash .spk{font-size:13px;padding:4px 12px;border-width:2px;margin-top:4px}
+#flash .hint{font-size:10px}
+#flash #jump{width:60px}
+#flash .fcard{max-width:100%;min-height:calc(100vh - 170px);border-radius:20px;padding:10px;margin-top:6px}
+@media(max-width:900px){.wrap,.wrap.in{grid-template-columns:1fr}.side{position:static;max-height:230px}}
+</style>
+</head>
+<body>
+<section id="home" class="view on">
+  <div class="hero"><div class="globe">🌍</div><h1>Explore World</h1><p class="sub">Hello, little explorer! What do you want to do today? 🎈</p></div>
+  <div class="grid home3">
+    <button class="tile" onclick="show('conts')"><span class="e">🌐</span>Explore World<small>Flags and capitals</small></button>
+    <button class="tile" onclick="show('langs')"><span class="e">🃏</span>Flash Cards<small>Learn new words and listen</small></button>
+    <button class="tile" onclick="openIndia()"><span class="e">🗺️</span>Explore India<small>States, capitals and map</small></button>
+  </div>
+</section>
+
+<section id="conts" class="view">
+  <div class="bar"><button class="back" onclick="show('home')">⬅ Home</button></div>
+  <h2>Pick a Continent 🌎</h2>
+  <div class="grid" id="contGrid"></div>
+</section>
+
+<section id="langs" class="view">
+  <div class="bar"><button class="back" onclick="show('home')">⬅ Home</button></div>
+  <h2>Pick a Language 🃏</h2>
+  <div class="grid" id="langGrid"></div>
+</section>
+
+<section id="browse" class="view">
+  <div class="bar">
+    <button class="back" onclick="show(backTo)">⬅ Back</button>
+    <button class="back" onclick="show('home')">🏠 Home</button>
+    <select id="sw" onchange="openC(this.value)"></select>
+    <h2 id="bt"></h2>
+  </div>
+  <div class="wrap" id="wrap">
+    <div class="side"><input id="q" placeholder="🔍 Search…" oninput="renderSide()"><div id="sideList"></div></div>
+    <div class="main" id="main" onclick="nextItem()"></div>
+    <div class="mapbox" id="mapbox" style="display:none"></div>
+  </div>
+</section>
+
+<section id="flash" class="view">
+  <div class="bar"><button class="back" onclick="show('langs')">⬅ Languages</button><button class="back" onclick="show('home')">🏠 Home</button></div>
+  <h2 id="ft" style="text-align:center"></h2>
+  <p class="sub" id="fcnt" style="text-align:center"></p>
+  <div class="prog"><div id="pb"></div></div>
+  <div class="main fcard" id="fc" onclick="stepF(1)"></div>
+  <div class="ctl"><button class="btn o" onclick="stepF(-1)">⬅ Back</button><button class="btn" onclick="stepF(1)">Next ➡</button></div>
+  <div class="ctl"><span>Go to word #</span><input id="jump" type="number" min="1" onchange="jumpF(this.value)"></div>
+</section>
+
+<script>
+const D={
+"Africa":["🌍",`DZ|Algeria|Algiers
+AO|Angola|Luanda
+BJ|Benin|Porto-Novo
+BW|Botswana|Gaborone
+BF|Burkina Faso|Ouagadougou
+BI|Burundi|Gitega
+CV|Cabo Verde|Praia
+CM|Cameroon|Yaoundé
+CF|Central African Republic|Bangui
+TD|Chad|N’Djamena
+KM|Comoros|Moroni
+CG|Congo (Republic)|Brazzaville
+CD|DR Congo|Kinshasa
+CI|Côte d’Ivoire|Yamoussoukro
+DJ|Djibouti|Djibouti
+EG|Egypt|Cairo
+GQ|Equatorial Guinea|Malabo
+ER|Eritrea|Asmara
+SZ|Eswatini|Mbabane
+ET|Ethiopia|Addis Ababa
+GA|Gabon|Libreville
+GM|Gambia|Banjul
+GH|Ghana|Accra
+GN|Guinea|Conakry
+GW|Guinea-Bissau|Bissau
+KE|Kenya|Nairobi
+LS|Lesotho|Maseru
+LR|Liberia|Monrovia
+LY|Libya|Tripoli
+MG|Madagascar|Antananarivo
+MW|Malawi|Lilongwe
+ML|Mali|Bamako
+MR|Mauritania|Nouakchott
+MU|Mauritius|Port Louis
+MA|Morocco|Rabat
+MZ|Mozambique|Maputo
+NA|Namibia|Windhoek
+NE|Niger|Niamey
+NG|Nigeria|Abuja
+RW|Rwanda|Kigali
+ST|São Tomé and Príncipe|São Tomé
+SN|Senegal|Dakar
+SC|Seychelles|Victoria
+SL|Sierra Leone|Freetown
+SO|Somalia|Mogadishu
+ZA|South Africa|Pretoria
+SS|South Sudan|Juba
+SD|Sudan|Khartoum
+TZ|Tanzania|Dodoma
+TG|Togo|Lomé
+TN|Tunisia|Tunis
+UG|Uganda|Kampala
+ZM|Zambia|Lusaka
+ZW|Zimbabwe|Harare`],
+"Asia":["🌏",`AF|Afghanistan|Kabul
+AM|Armenia|Yerevan
+AZ|Azerbaijan|Baku
+BH|Bahrain|Manama
+BD|Bangladesh|Dhaka
+BT|Bhutan|Thimphu
+BN|Brunei|Bandar Seri Begawan
+KH|Cambodia|Phnom Penh
+CN|China|Beijing
+CY|Cyprus|Nicosia
+GE|Georgia|Tbilisi
+IN|India|New Delhi
+ID|Indonesia|Jakarta
+IR|Iran|Tehran
+IQ|Iraq|Baghdad
+IL|Israel|Jerusalem
+JP|Japan|Tokyo
+JO|Jordan|Amman
+KZ|Kazakhstan|Astana
+KW|Kuwait|Kuwait City
+KG|Kyrgyzstan|Bishkek
+LA|Laos|Vientiane
+LB|Lebanon|Beirut
+MY|Malaysia|Kuala Lumpur
+MV|Maldives|Malé
+MN|Mongolia|Ulaanbaatar
+MM|Myanmar|Naypyidaw
+NP|Nepal|Kathmandu
+KP|North Korea|Pyongyang
+OM|Oman|Muscat
+PK|Pakistan|Islamabad
+PH|Philippines|Manila
+QA|Qatar|Doha
+SA|Saudi Arabia|Riyadh
+SG|Singapore|Singapore
+KR|South Korea|Seoul
+LK|Sri Lanka|Sri Jayawardenepura Kotte
+SY|Syria|Damascus
+TJ|Tajikistan|Dushanbe
+TH|Thailand|Bangkok
+TL|Timor-Leste|Dili
+TR|Türkiye|Ankara
+TM|Turkmenistan|Ashgabat
+AE|United Arab Emirates|Abu Dhabi
+UZ|Uzbekistan|Tashkent
+VN|Vietnam|Hanoi
+YE|Yemen|Sana’a`],
+"Europe":["🌍",`AL|Albania|Tirana
+AD|Andorra|Andorra la Vella
+AT|Austria|Vienna
+BY|Belarus|Minsk
+BE|Belgium|Brussels
+BA|Bosnia and Herzegovina|Sarajevo
+BG|Bulgaria|Sofia
+HR|Croatia|Zagreb
+CZ|Czechia|Prague
+DK|Denmark|Copenhagen
+EE|Estonia|Tallinn
+FI|Finland|Helsinki
+FR|France|Paris
+DE|Germany|Berlin
+GR|Greece|Athens
+HU|Hungary|Budapest
+IS|Iceland|Reykjavík
+IE|Ireland|Dublin
+IT|Italy|Rome
+XK|Kosovo|Pristina
+LV|Latvia|Riga
+LI|Liechtenstein|Vaduz
+LT|Lithuania|Vilnius
+LU|Luxembourg|Luxembourg
+MT|Malta|Valletta
+MD|Moldova|Chișinău
+MC|Monaco|Monaco
+ME|Montenegro|Podgorica
+NL|Netherlands|Amsterdam
+MK|North Macedonia|Skopje
+NO|Norway|Oslo
+PL|Poland|Warsaw
+PT|Portugal|Lisbon
+RO|Romania|Bucharest
+RU|Russia|Moscow
+SM|San Marino|San Marino
+RS|Serbia|Belgrade
+SK|Slovakia|Bratislava
+SI|Slovenia|Ljubljana
+ES|Spain|Madrid
+SE|Sweden|Stockholm
+CH|Switzerland|Bern
+UA|Ukraine|Kyiv
+GB|United Kingdom|London
+VA|Vatican City|Vatican City`],
+"North America":["🌎",`AG|Antigua and Barbuda|St. John’s
+BS|Bahamas|Nassau
+BB|Barbados|Bridgetown
+BZ|Belize|Belmopan
+CA|Canada|Ottawa
+CR|Costa Rica|San José
+CU|Cuba|Havana
+DM|Dominica|Roseau
+DO|Dominican Republic|Santo Domingo
+SV|El Salvador|San Salvador
+GD|Grenada|St. George’s
+GT|Guatemala|Guatemala City
+HT|Haiti|Port-au-Prince
+HN|Honduras|Tegucigalpa
+JM|Jamaica|Kingston
+MX|Mexico|Mexico City
+NI|Nicaragua|Managua
+PA|Panama|Panama City
+KN|Saint Kitts and Nevis|Basseterre
+LC|Saint Lucia|Castries
+VC|Saint Vincent and the Grenadines|Kingstown
+TT|Trinidad and Tobago|Port of Spain
+US|United States|Washington, D.C.`],
+"South America":["🌎",`AR|Argentina|Buenos Aires
+BO|Bolivia|Sucre
+BR|Brazil|Brasília
+CL|Chile|Santiago
+CO|Colombia|Bogotá
+EC|Ecuador|Quito
+GY|Guyana|Georgetown
+PY|Paraguay|Asunción
+PE|Peru|Lima
+SR|Suriname|Paramaribo
+UY|Uruguay|Montevideo
+VE|Venezuela|Caracas`],
+"Oceania":["🌏",`AU|Australia|Canberra
+FJ|Fiji|Suva
+KI|Kiribati|Tarawa
+MH|Marshall Islands|Majuro
+FM|Micronesia|Palikir
+NR|Nauru|Yaren
+NZ|New Zealand|Wellington
+PW|Palau|Ngerulmud
+PG|Papua New Guinea|Port Moresby
+WS|Samoa|Apia
+SB|Solomon Islands|Honiara
+TO|Tonga|Nuku’alofa
+TV|Tuvalu|Funafuti
+VU|Vanuatu|Port Vila`],
+"Antarctica":["🧊",``]
+};
+const flag=c=>[...c].map(x=>String.fromCodePoint(127397+x.charCodeAt(0))).join('');
+const rows=n=>D[n][1]?D[n][1].split('\n').map(l=>l.split('|')):[];
+/* name|capital|type|lat|lon */
+const IN=`Andhra Pradesh|Amaravati|State|16.5|80.5
+Arunachal Pradesh|Itanagar|State|27.1|93.6
+Assam|Dispur|State|26.1|91.8
+Bihar|Patna|State|25.6|85.1
+Chhattisgarh|Raipur|State|21.3|81.6
+Goa|Panaji|State|15.5|73.8
+Gujarat|Gandhinagar|State|23.2|72.6
+Haryana|Chandigarh|State|30.7|76.8
+Himachal Pradesh|Shimla|State|31.1|77.2
+Jharkhand|Ranchi|State|23.3|85.3
+Karnataka|Bengaluru|State|13|77.6
+Kerala|Thiruvananthapuram|State|8.5|76.9
+Madhya Pradesh|Bhopal|State|23.3|77.4
+Maharashtra|Mumbai|State|19.1|72.9
+Manipur|Imphal|State|24.8|93.9
+Meghalaya|Shillong|State|25.6|91.9
+Mizoram|Aizawl|State|23.7|92.7
+Nagaland|Kohima|State|25.7|94.1
+Odisha|Bhubaneswar|State|20.3|85.8
+Punjab|Chandigarh|State|30.7|76.8
+Rajasthan|Jaipur|State|26.9|75.8
+Sikkim|Gangtok|State|27.3|88.6
+Tamil Nadu|Chennai|State|13.1|80.3
+Telangana|Hyderabad|State|17.4|78.5
+Tripura|Agartala|State|23.8|91.3
+Uttar Pradesh|Lucknow|State|26.8|80.9
+Uttarakhand|Dehradun|State|30.3|78
+West Bengal|Kolkata|State|22.6|88.4
+Andaman and Nicobar Islands|Port Blair|Union Territory|11.7|92.7
+Chandigarh|Chandigarh|Union Territory|30.7|76.8
+Dadra and Nagar Haveli and Daman and Diu|Daman|Union Territory|20.4|72.8
+Delhi|New Delhi|Union Territory|28.6|77.2
+Jammu and Kashmir|Srinagar / Jammu|Union Territory|34.1|74.8
+Ladakh|Leh|Union Territory|34.2|77.6
+Lakshadweep|Kavaratti|Union Territory|10.6|72.6
+Puducherry|Puducherry|Union Territory|11.9|79.8`.split('\n').map(l=>l.split('|'));
+const OUT=[[74.3,37],[77.8,35.5],[79,34.3],[78.9,32.5],[80.2,30.9],[80.1,28.8],[81.9,27.8],[84.1,27.4],[88.1,26.5],[88.2,27.9],[88.9,27.3],[89.8,26.8],[92,26.9],[94.5,28],[96.1,29.4],[97.3,28.2],[95.5,26.2],[94.6,24],[93.4,22.9],[92.4,22],[91.4,23.2],[92,24.2],[90.7,25.2],[89,25.3],[88.7,24.2],[88.9,22.6],[88.1,21.7],[86.9,21],[85,19.6],[82.3,16.7],[80.3,15.5],[80.2,13.3],[79.9,10.3],[78.2,8.9],[77.5,8.1],[76.5,9],[75.5,11.8],[74.7,13.5],[73.8,15.5],[72.8,19],[72.7,21],[72.2,21.2],[70.5,20.9],[69,22.3],[68.2,23.7],[70,24.2],[70.1,25],[71.1,24.4],[70.4,25.7],[69.5,26.5],[70.5,28],[71.9,27.9],[72.8,29],[74,30],[74.6,31],[74.5,32.2],[75.3,32.8],[74.3,34]];
+const PX=(lo,la)=>[((lo-67)*20).toFixed(0),((38-la)*20).toFixed(0)];
+const worldItems=n=>rows(n).map(x=>[flag(x[0]),x[1],x[2]]);
+let items=[],sel=0,backTo='home',mode='world';
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id===id));window.scrollTo(0,0)}
+function say(t,l){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang=l;u.rate=.8;speechSynthesis.speak(u)}catch(e){}}
+$('contGrid').innerHTML=Object.keys(D).map(n=>`<button class="tile" onclick="backTo='conts';openC('${n}')"><span class="e">${D[n][0]}</span>${n}<small>${rows(n).length||'No'} countries</small></button>`).join('');
+$('sw').innerHTML=Object.keys(D).map(n=>`<option>${n}</option>`).join('');
+function setup(){sel=0;$('q').value='';show('browse');renderSide();renderMain()}
+function openC(n){mode='world';items=worldItems(n);$('sw').style.display='';$('sw').value=n;$('bt').textContent='';$('wrap').className='wrap';$('mapbox').style.display='none';setup()}
+function openIndia(){mode='india';backTo='home';items=IN.map(a=>['🇮🇳',a[0],a[1],a[2],a[3],a[4]]);$('sw').style.display='none';$('bt').textContent='India 🇮🇳';$('wrap').className='wrap in';$('mapbox').style.display='flex';setup()}
+function renderSide(){
+  const q=$('q').value.toLowerCase();
+  $('sideList').innerHTML=items.map((x,i)=>[x,i]).filter(([x])=>x[1].toLowerCase().includes(q)||x[2].toLowerCase().includes(q)).map(([x,i])=>`<button class="it ${i===sel?'on':''}" onclick="sel=${i};renderSide();renderMain()"><span class="f">${x[0]}</span>${x[1]}</button>`).join('')||'<p class="note" style="font-size:16px;padding:6px">Nothing found 🙈</p>';
+  const a=document.querySelector('.it.on');if(a)a.scrollIntoView({block:'nearest'});
+}
+function nextItem(){if(items.length>1){sel=(sel+1)%items.length;renderSide();renderMain()}}
+function sayItem(e){e.stopPropagation();const x=items[sel];say(mode==='india'?`${x[1]}. The capital is ${x[2]}`:`${x[1]}. The capital is ${x[2]}`,'en-IN')}
+function renderMain(){
+  const x=items[sel];
+  if(!x){$('main').innerHTML='<div class="big">🧊</div><p class="nm">Antarctica</p><p class="note">Brrr! No countries live here. Only penguins and scientists! 🐧</p>';return}
+  $('main').innerHTML=`<div class="big">${x[0]}</div><p class="nm">${x[1]}</p><div class="lbl">${mode==='india'?x[3]+' · ':''}Capital 🏛️</div><p class="cap">${x[2]}</p><button class="spk" onclick="sayItem(event)">🔊 Listen</button><div class="hint">👆 Tap anywhere for the next one!</div>`;
+  if(mode==='india'){
+    const d=IN.map((a,i)=>{const[p,q]=PX(+a[4],+a[3]);return i===sel?'':`<circle class="dot" cx="${p}" cy="${q}" r="6"/>`}).join('');
+    const[px,py]=PX(+x[5],+x[4]);
+    $('mapbox').innerHTML=`<div class="lbl" style="margin:0 0 6px">📍 Where is ${x[1]}?</div><svg viewBox="0 0 620 640"><polygon class="land" points="${OUT.map(o=>PX(o[0],o[1]).join(',')).join(' ')}"/>${d}<circle class="pulse" cx="${px}" cy="${py}" r="12"/><circle class="pin" cx="${px}" cy="${py}" r="13"/><text x="${Math.min(+px+18,470)}" y="${+py+6}" font-size="26" font-weight="700" fill="#2b2350" stroke="#fff" stroke-width="5" paint-order="stroke">${x[2].split(' /')[0]}</text></svg>`;
+  }
+}
+/* flash cards: emoji|English|Hindi|Roman|Marathi|Roman|Sanskrit|Roman  (starter set) */
+const M=`🍎|Apple|सेब|seb|सफरचंद|safarchand|सेवफलम्|sevaphalam
+💧|Water|पानी|paani|पाणी|paani|जलम्|jalam
+👩|Mother|माँ|maa|आई|aai|माता|maata
+👨|Father|पिता|pitaa|बाबा|baaba|पिता|pitaa
+📚|Book|किताब|kitaab|पुस्तक|pustak|पुस्तकम्|pustakam
+☀️|Sun|सूरज|sooraj|सूर्य|soorya|सूर्यः|sooryah
+🌙|Moon|चाँद|chaand|चंद्र|chandra|चन्द्रः|chandrah
+🌳|Tree|पेड़|ped|झाड|jhaad|वृक्षः|vrikshah
+🌸|Flower|फूल|phool|फूल|phool|पुष्पम्|pushpam
+🐄|Cow|गाय|gaay|गाय|gaay|गौः|gauh
+🐶|Dog|कुत्ता|kuttaa|कुत्रा|kutraa|श्वा|shvaa
+🐱|Cat|बिल्ली|billee|मांजर|maanjar|मार्जारः|maarjaarah
+🐟|Fish|मछली|machhalee|मासा|maasaa|मत्स्यः|matsyah
+🐦|Bird|चिड़िया|chidiyaa|पक्षी|pakshee|पक्षी|pakshee
+🐘|Elephant|हाथी|haathee|हत्ती|hattee|गजः|gajah
+🐴|Horse|घोड़ा|ghodaa|घोडा|ghodaa|अश्वः|ashvah
+🏠|House|घर|ghar|घर|ghar|गृहम्|gruham
+🏫|School|स्कूल|skool|शाळा|shaalaa|विद्यालयः|vidyaalayah
+🥛|Milk|दूध|doodh|दूध|doodh|दुग्धम्|dugdham
+🍚|Rice|चावल|chaaval|भात|bhaat|तण्डुलाः|tandulaah
+🍞|Bread|रोटी|rotee|भाकरी|bhaakaree||
+🍌|Banana|केला|kelaa|केळे|kele|कदलीफलम्|kadaleephalam
+🥭|Mango|आम|aam|आंबा|aambaa|आम्रम्|aamram
+✋|Hand|हाथ|haath|हात|haat|हस्तः|hastah
+👁️|Eye|आँख|aankh|डोळा|dolaa|नेत्रम्|netram
+👃|Nose|नाक|naak|नाक|naak|नासिका|naasikaa
+👂|Ear|कान|kaan|कान|kaan|कर्णः|karnah
+🔥|Fire|आग|aag|आग|aag|अग्निः|agnih
+⭐|Star|तारा|taaraa|तारा|taaraa|तारा|taaraa
+🌧️|Rain|बारिश|baarish|पाऊस|paaoos|वर्षा|varshaa
+🚌|Bus|बस|bas|बस|bas||
+🚗|Car|गाड़ी|gaadee|गाडी|gaadee||
+⏰|Clock|घड़ी|ghadee|घड्याळ|ghadyaal||
+🚪|Door|दरवाज़ा|darvaazaa|दार|daar|द्वारम्|dvaaram
+🧑‍🤝‍🧑|Friend|दोस्त|dost|मित्र|mitra|मित्रम्|mitram
+👩‍🏫|Teacher|शिक्षक|shikshak|शिक्षक|shikshak|शिक्षकः|shikshakah
+🍽️|Food|खाना|khaanaa|जेवण|jevan|भोजनम्|bhojanam
+🔴|Red|लाल|laal|लाल|laal|रक्तः|raktah
+🔵|Blue|नीला|neelaa|निळा|nilaa|नीलः|neelah
+🟡|Yellow|पीला|peelaa|पिवळा|pivlaa|पीतः|peetah
+🟢|Green|हरा|haraa|हिरवा|hirvaa|हरितः|haritah
+1️⃣|One|एक|ek|एक|ek|एकः|ekah
+2️⃣|Two|दो|do|दोन|don|द्वौ|dvau
+3️⃣|Three|तीन|teen|तीन|teen|त्रयः|trayah
+4️⃣|Four|चार|chaar|चार|chaar|चत्वारः|chatvaarah
+5️⃣|Five|पाँच|paanch|पाच|paach|पञ्च|pancha`.split('\n').map(l=>l.split('|'));
+const X=`🐯 Tiger,🦁 Lion,🐒 Monkey,🐻 Bear,🐰 Rabbit,🐑 Sheep,🐐 Goat,🐓 Hen,🦆 Duck,🐸 Frog,🐢 Turtle,🐍 Snake,🦋 Butterfly,🐝 Bee,🐜 Ant,🦓 Zebra,🦒 Giraffe,🐪 Camel,🐷 Pig,🐭 Mouse,🦜 Parrot,🦚 Peacock,🐬 Dolphin,🦀 Crab,🍇 Grapes,🍊 Orange,🍉 Watermelon,🍓 Strawberry,🍍 Pineapple,🍋 Lemon,🍐 Pear,🍅 Tomato,🥕 Carrot,🥔 Potato,🌽 Corn,🧅 Onion,🥚 Egg,🧀 Cheese,🍪 Biscuit,🎂 Cake,🍦 Ice cream,🍫 Chocolate,🍕 Pizza,🍯 Honey,🦶 Foot,👄 Mouth,🦷 Tooth,👅 Tongue,❤️ Heart,👕 Shirt,👖 Jeans,👗 Dress,🧦 Socks,👟 Shoes,🧢 Cap,👓 Glasses,🎒 Bag,☂️ Umbrella,🛏️ Bed,🪑 Chair,🪥 Toothbrush,🔑 Key,💡 Light bulb,📺 Television,☎️ Telephone,🧹 Broom,🥄 Spoon,🍽️ Plate,☕ Cup,🪞 Mirror,🧸 Teddy bear,⚽ Ball,🪁 Kite,🚲 Bicycle,🚂 Train,✈️ Airplane,🚢 Ship,🚑 Ambulance,🚒 Fire truck,🛵 Scooter,🚜 Tractor,🚁 Helicopter,🛺 Auto rickshaw,☁️ Cloud,⛰️ Mountain,🌊 Wave,🌈 Rainbow,❄️ Snow,💨 Wind,⚡ Lightning,🏖️ Beach,🍃 Leaf,🌻 Sunflower,🪨 Stone,✏️ Pencil,🖍️ Crayon,📏 Ruler,✂️ Scissors,📓 Notebook,🖊️ Pen,🎨 Paint,🔔 Bell,🎵 Music,🏥 Hospital,🏪 Shop,🛕 Temple,🏰 Castle,🏃 Run,🚶 Walk,🏊 Swim,💃 Dance,📖 Read,✍️ Write,😀 Happy,😢 Sad,😡 Angry,😮 Surprised`.split(',').map(s=>{s=s.trim();const i=s.indexOf(' ');return [s.slice(0,i),s.slice(i+1)]});
+const LG={en:['English','🔤','en-IN',2000],hi:['हिन्दी','🇮🇳','hi-IN',1000],mr:['मराठी','🚩','mr-IN',1000],sa:['संस्कृतम्','🕉️','hi-IN',500]};
+const P=`Go,No,Me,We,He,It,In,On,At,Is,My,By,Do,Up,Us,An,As,Am,If,Or,Hi,Ox,Sun,Cat,Dog,Run,Sit,Hat,Cup,Bed,Bus,Pen,Red,Big,Hot,Cow,Egg,Ant,Bee,Fan,Jug,Leg,Map,Net,Pig,Sad,Toy,Van,Wet,Yes,Zip,Box,Cap,Day,Eye,Fun,Hen,Ice,Jam,Key,Lip,Mud,Nut,Owl,Pot,Rat,Sky,Tin,Win,Fox,Bat,Bag,Car,Ear,Fly,Mom,Dad,Tea,Pan,Pin,Rug,Sea,Tap,Toe,Web,Arm,Bad,Cry,Dig,Eat,Get,Hop,Jog,Kid,Mix,Old,Sip,Mat,Fat,Tall,Fish,Milk,Door,Play,Jump,Sing,Walk,Swim,Read,Book,Ball,Cake,Duck,Frog,Gift,Hand,Jump,Kite,Lamp,Moon,Nest,Rain,Ship,Star,Tree,Wind,Bird,Bell,Boat,Cold,Warm,Fast,Slow,Open,Shut,Happy,Water,Apple,Bread,Chair,Clock,Cloud,Dance,Drink,Earth,Green,House,Light,Money,Mouse,Paper,Plant,River,Smile,Table,Teeth,Watch,Yellow,School,Friend,Garden,Window,Pencil,Banana,Orange,Basket,Bridge,Doctor,Flower,Jungle,Market,Monkey,Rabbit,Teacher,Rainbow,Kitchen,Library,Morning,Mountain,Elephant,Umbrella,Butterfly,Playground,Breakfast`.split(',');
+const len=w=>[...w].filter(c=>!/[\u0900-\u0903\u093A-\u094F\u0951-\u0957\u0962\u0963\s]/.test(c)).length;
+function wordsFor(k){
+  let a;
+  if(k==='en')a=M.map(r=>r[1]).concat(X.map(x=>x[1]),P);
+  else{const c={hi:2,mr:4,sa:6}[k];a=M.map(r=>r[c]).filter(Boolean)}
+  const seen=new Set();a=a.filter(w=>{const t=w.toLowerCase();return !seen.has(t)&&seen.add(t)});
+  return a.sort((x,y)=>len(x)-len(y));
+}
+$('langGrid').innerHTML=Object.keys(LG).map(k=>`<button class="tile" onclick="openF('${k}')"><span class="e">${LG[k][1]}</span>${LG[k][0]}<small>${wordsFor(k).length} words now</small></button>`).join('');
+let W=[],fi=0,fk='en';
+function openF(k){fk=k;W=wordsFor(k);fi=0;$('ft').textContent=LG[k][0]+' Flash Cards';$('jump').max=W.length;show('flash');drawF()}
+function drawF(){
+  const w=W[fi];$('fcnt').textContent=`Word ${fi+1} of ${W.length} · ${len(w)} letter${len(w)>1?'s':''}`;$('pb').style.width=((fi+1)/W.length*100)+'%';
+  $('fc').innerHTML=`<p class="word" style="font-size:min(340px,${(92/([...w].length*.6)).toFixed(1)}vw)">${w}</p><button class="spk" onclick="event.stopPropagation();say(W[fi],LG[fk][2])">🔊 Listen</button><div class="hint">Tap anywhere for the next word</div>`;
+}
+function stepF(d){fi=(fi+d+W.length)%W.length;drawF()}
+function jumpF(v){v=Math.max(1,Math.min(W.length,+v||1));fi=v-1;drawF()}
+</script>
+</body>
+</html>
