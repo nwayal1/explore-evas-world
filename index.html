@@ -74,12 +74,57 @@ svg{width:100%;max-width:420px;height:auto}
 #flash .hint{font-size:10px}
 #flash #jump{width:60px}
 #flash .fcard{max-width:100%;min-height:calc(100vh - 170px);border-radius:20px;padding:10px;margin-top:6px}
+#home{position:relative;overflow:hidden}
+.floaty{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.floaty span{position:absolute;bottom:-70px;opacity:.6;animation:rise2 linear infinite}
+@keyframes rise2{to{transform:translateY(-115vh) rotate(30deg)}}
+#home .hero,#home .grid,#home .fact{position:relative;z-index:1}
+#home .globe{cursor:pointer;font-size:96px;filter:drop-shadow(0 8px 0 rgba(0,0,0,.12))}
+#home h1{display:flex;justify-content:center;flex-wrap:wrap;text-shadow:none;margin:6px 0}
+#home h1 span{display:inline-block;animation:wob 1.8s ease-in-out infinite;-webkit-text-stroke:2px var(--line)}
+#home h1 .sp{width:.35em;animation:none}
+@keyframes wob{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-14px) rotate(5deg)}}
+#home .tile{animation:rise .8s cubic-bezier(.3,1.6,.5,1) backwards}
+#home .tile:nth-child(2){animation-delay:.2s}#home .tile:nth-child(3){animation-delay:.4s}
+@keyframes rise{from{transform:translateY(70px) scale(.5);opacity:0}}
+#home .tile .e{animation:bob 2.2s ease-in-out infinite}
+#home .tile:nth-child(2) .e{animation-delay:.4s}#home .tile:nth-child(3) .e{animation-delay:.8s}
+#greet{font-size:30px;font-weight:700;color:var(--o);min-height:40px;animation:pop .5s}
+.fact{max-width:580px;margin:22px auto 0;background:var(--card);border:3px dashed var(--o);border-radius:22px;padding:10px 18px;text-align:center;font-size:18px}
+.p{position:fixed;font-size:30px;pointer-events:none;z-index:50;animation:burst 1.1s ease-out forwards}
+@keyframes burst{to{transform:translate(var(--dx),var(--dy)) rotate(400deg) scale(.5);opacity:0}}
+#home::before{content:"";position:fixed;inset:0;z-index:0;background:linear-gradient(135deg,#4cc9ff,#8b5cf6,#ff5fcf,#ffb347,#4cc9ff);background-size:400% 400%;animation:grad 14s ease infinite}
+@keyframes grad{50%{background-position:100% 100%}}
+#home::after{content:"🌳 🌲 🏠 🌴 🌳 🏡 🌲 🌴 🌳 🌲 🏠 🌴 🌳 🏡 🌲 🌴 🌳 🌲";position:fixed;left:0;right:0;bottom:0;height:78px;z-index:0;background:linear-gradient(#5bd35b,#22a34a);border-radius:50% 50% 0 0/30px 30px 0 0;font-size:46px;white-space:nowrap;overflow:hidden;padding-top:6px;text-align:center}
+#home{padding-bottom:110px}
+#home .sub{color:#fff;text-shadow:0 2px 0 rgba(43,35,80,.45)}
+#home h1{font-size:clamp(46px,11vw,110px)}
+#home #greet{color:#fff6a3;font-size:34px;text-shadow:0 3px 0 rgba(43,35,80,.5)}
+#home .tile{font-size:28px;padding:30px 22px;box-shadow:0 8px 0 var(--line),0 0 28px rgba(255,255,255,.55)}
+#home .tile .e{font-size:78px}
+.clock{position:relative;z-index:1;max-width:520px;margin:16px auto 0;background:#2b2350;border:4px solid #fff;border-radius:26px;padding:12px 18px;text-align:center;color:#fff;box-shadow:0 8px 0 rgba(43,35,80,.45)}
+.clock .ct{font-size:17px;color:#9be7ff;font-weight:700;letter-spacing:1px}
+.clock .ctime{font-family:"Courier New",monospace;font-size:clamp(34px,9vw,60px);font-weight:700;color:#ffe14d;text-shadow:0 0 14px #ffb300;line-height:1.1}
+.clock .cdate{font-size:18px;color:#fff}
+#home.on{display:flex;flex-direction:column}
+#home .hero{padding-top:48px}
+#home .grid{width:100%}
+#home .fact{order:5;width:100%;margin:34px auto 0}
+#home .clock{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:8px;margin:0;max-width:none;padding:5px 12px;border-width:2px;border-radius:14px;box-shadow:0 3px 0 rgba(43,35,80,.45)}
+#home .clock .ct{font-size:10px;letter-spacing:.5px}
+#home .clock .ctime{font-size:20px}
+#home .clock .cdate{font-size:11px}
+#aud.off{opacity:.65}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
 @media(max-width:900px){.wrap,.wrap.in{grid-template-columns:1fr}.side{position:static;max-height:230px}}
 </style>
 </head>
 <body>
 <section id="home" class="view on">
-  <div class="hero"><div class="globe">🌍</div><h1>Explore World</h1><p class="sub">Hello, little explorer! What do you want to do today? 🎈</p></div>
+  <div class="floaty" id="floaty"></div>
+  <div class="hero"><div class="globe" onclick="boom(event)" title="Tap me!">🌍</div><h1 id="ttl">Explore World</h1><p class="sub" id="greet">Hello! 👋</p><p class="sub">Tap the globe for a surprise, then pick your adventure!</p></div>
+  <div class="clock"><div class="ct" id="cgreet">📍 PUNE, INDIA 🇮🇳</div><div class="ctime" id="ctime">--:--:--</div><div class="cdate" id="cdate"></div></div>
+  <div class="fact">💡 <b>Did you know?</b> <span id="fact">Asia is the biggest continent! 🌏</span></div>
   <div class="grid home3">
     <button class="tile" onclick="show('conts')"><span class="e">🌐</span>Explore World<small>Flags and capitals</small></button>
     <button class="tile" onclick="show('langs')"><span class="e">🃏</span>Flash Cards<small>Learn new words and listen</small></button>
@@ -104,6 +149,7 @@ svg{width:100%;max-width:420px;height:auto}
     <button class="back" onclick="show(backTo)">⬅ Back</button>
     <button class="back" onclick="show('home')">🏠 Home</button>
     <select id="sw" onchange="openC(this.value)"></select>
+    <button class="back" id="aud" onclick="toggleAuto()">🔊 Sound: ON</button>
     <h2 id="bt"></h2>
   </div>
   <div class="wrap" id="wrap">
@@ -385,9 +431,11 @@ function renderSide(){
   const a=document.querySelector('.it.on');if(a)a.scrollIntoView({block:'nearest'});
 }
 function nextItem(){if(items.length>1){sel=(sel+1)%items.length;renderSide();renderMain()}}
-function sayItem(e){e.stopPropagation();const x=items[sel];say(mode==='india'?`${x[1]}. The capital is ${x[2]}`:`${x[1]}. The capital is ${x[2]}`,'en-IN')}
+function sayItem(e){e.stopPropagation();say(items[sel][1],'en-IN')}
+let autoSound=true;
+function toggleAuto(){autoSound=!autoSound;const b=$('aud');b.textContent=autoSound?'🔊 Sound: ON':'🔇 Sound: OFF';b.classList.toggle('off',!autoSound);if(!autoSound){try{speechSynthesis.cancel()}catch(e){}}}
 function renderMain(){
-  const x=items[sel];
+  const x=items[sel];if(x&&autoSound)say(x[1],'en-IN');
   if(!x){$('main').innerHTML='<div class="big">🧊</div><p class="nm">Antarctica</p><p class="note">Brrr! No countries live here. Only penguins and scientists! 🐧</p>';return}
   $('main').innerHTML=`<div class="big">${x[0]}</div><p class="nm">${x[1]}</p><div class="lbl">${mode==='india'?x[3]+' · ':''}Capital 🏛️</div><p class="cap">${x[2]}</p><button class="spk" onclick="sayItem(event)">🔊 Listen</button><div class="hint">👆 Tap anywhere for the next one!</div>`;
   if(mode==='india'){
@@ -497,6 +545,21 @@ function drawF(){
   const w=W[fi];$('fcnt').textContent=`Word ${fi+1} of ${W.length} · ${len(w)} letter${len(w)>1?'s':''}`;$('pb').style.width=((fi+1)/W.length*100)+'%';
   $('fc').innerHTML=`<p class="word" style="font-size:min(340px,${(92/([...w].length*.6)).toFixed(1)}vw)">${w}</p><button class="spk" onclick="event.stopPropagation();say(W[fi],LG[fk][2])">🔊 Listen</button><div class="hint">Tap anywhere or press → for next, ← for previous</div>`;
 }
+function boom(e){const em=['⭐','🎈','🎉','🌟','🦋','🌈','🎊','🚀'];for(let i=0;i<26;i++){const s=document.createElement('span');s.className='p';s.textContent=em[i%em.length];const a=Math.random()*6.28,d=90+Math.random()*190;s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),1200)}}
+(function(){
+  const cols=['#7c4dff','#ff7a2f','#22c55e','#ff4f9a','#1e9bff','#f5a400'];
+  $('ttl').innerHTML=[...'Explore World'].map((c,i)=>c===' '?'<span class="sp"></span>':`<span style="color:${cols[i%6]};animation-delay:${(i*.12).toFixed(2)}s">${c}</span>`).join('');
+  const fl=$('floaty'),em=['⭐','☁️','🎈','🦋','🌈','🚀','🌟','🪁','🐘','🦜','🌍','🎨'];
+  for(let i=0;i<18;i++){const s=document.createElement('span');s.textContent=em[i%em.length];s.style.cssText=`left:${Math.random()*95}%;font-size:${22+Math.random()*30}px;animation-duration:${9+Math.random()*10}s;animation-delay:-${(Math.random()*15).toFixed(1)}s`;fl.appendChild(s)}
+  const G=['Hello! 👋','नमस्ते! 🙏','नमस्कार! 😊','स्वागतम्! 🌟'],F=['Asia is the biggest continent! 🌏','India has 28 states and 8 union territories! 🇮🇳','Antarctica is covered in ice and has penguins! 🐧','Russia is the biggest country in the world! 🗺️','Vatican City is the smallest country! 🏛️','Mount Everest is the tallest mountain! 🏔️','There are 7 continents to explore! 🌍'];
+  let gi=0;setInterval(()=>{gi++;const g=$('greet');g.style.animation='none';void g.offsetWidth;g.style.animation='';g.textContent=G[gi%G.length];$('fact').textContent=F[gi%F.length]},3500);
+})();
+function tick(){const n=new Date(),o={timeZone:'Asia/Kolkata'};
+  $('ctime').textContent=n.toLocaleTimeString('en-IN',{...o,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:true}).toUpperCase();
+  $('cdate').textContent=n.toLocaleDateString('en-IN',{...o,weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const h=+n.toLocaleString('en-GB',{...o,hour:'2-digit',hour12:false})%24;
+  $('cgreet').textContent=(h<5?'🌙 Sleepy night':h<12?'🌅 Good morning':h<17?'☀️ Good afternoon':h<20?'🌇 Good evening':'🌙 Good night')+' from PUNE, INDIA 🇮🇳'}
+tick();setInterval(tick,1000);
 document.addEventListener('keydown',e=>{if(!$('flash').classList.contains('on')||e.target.tagName==='INPUT'||e.ctrlKey||e.metaKey||e.altKey)return;if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();stepF(1)}else if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();stepF(-1)}});
 function stepF(d){fi=(fi+d+W.length)%W.length;drawF()}
 function jumpF(v){v=Math.max(1,Math.min(W.length,+v||1));fi=v-1;drawF()}
