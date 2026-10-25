@@ -115,6 +115,30 @@ svg{width:100%;max-width:420px;height:auto}
 #home .clock .ctime{font-size:20px}
 #home .clock .cdate{font-size:11px}
 #aud.off{opacity:.65}
+#home .home3{max-width:1120px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:16px;margin:16px 0}
+.nb{font:inherit;font-size:54px;font-weight:800;color:#fff;border:4px solid var(--line);border-radius:28px;padding:14px 0;cursor:pointer;box-shadow:0 7px 0 var(--line)}
+.nb small{display:block;font-size:16px}
+.nb:hover{transform:translateY(-4px) rotate(-2deg)}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px}
+.tabs button,.tl button{font:inherit;font-size:18px;font-weight:700;border:3px solid var(--line);border-radius:18px;padding:8px 16px;background:var(--card);color:var(--ink);cursor:pointer}
+.tabs button.on{background:var(--o);color:#fff}
+.lcard{max-width:760px;margin:0 auto;background:var(--card);border:4px solid var(--line);border-radius:30px;padding:20px 14px;text-align:center;box-shadow:0 8px 0 var(--line)}
+.eq{font-size:clamp(40px,10vw,78px);font-weight:800}
+.grp{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.gb{background:var(--bg);border:3px dashed var(--mute);border-radius:14px;padding:4px 8px;font-size:22px;line-height:1.2;max-width:150px;word-break:break-all}
+.tl{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:760px;margin:16px auto 0}
+.tl button{font-size:16px;font-weight:400;padding:6px 12px}
+.tl button.on{background:var(--g);color:#fff}
+.opts{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.opt{font:inherit;font-size:44px;font-weight:800;min-width:110px;border:4px solid var(--line);border-radius:24px;padding:10px 20px;background:var(--b);color:#fff;cursor:pointer;box-shadow:0 6px 0 var(--line)}
+.opt.good{background:var(--g);animation:pop .4s}
+.opt.bad{background:#999;animation:shk .3s}
+@keyframes shk{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.fb{font-size:26px;font-weight:700;min-height:34px;color:var(--o);margin:10px 0 0}
+.xfs{display:none}
+#fc.fsm{position:fixed;inset:0;z-index:100;max-width:none;width:100%;min-height:0;margin:0;border:0;border-radius:0;--cap:78vh;background:var(--card)}
+#fc.fsm .xfs{display:block;position:absolute;top:10px;right:14px;font:inherit;font-size:22px;border:3px solid var(--line);border-radius:50%;width:44px;height:44px;background:var(--card);color:var(--ink);cursor:pointer}
 @media(prefers-reduced-motion:reduce){*{animation:none!important}}
 @media(max-width:900px){.wrap,.wrap.in{grid-template-columns:1fr}.side{position:static;max-height:230px}}
 </style>
@@ -128,6 +152,7 @@ svg{width:100%;max-width:420px;height:auto}
   <div class="grid home3">
     <button class="tile" onclick="show('conts')"><span class="e">🌐</span>Explore World<small>Flags and capitals</small></button>
     <button class="tile" onclick="show('langs')"><span class="e">🃏</span>Flash Cards<small>Learn new words and listen</small></button>
+    <button class="tile" onclick="openTables()"><span class="e">✖️</span>Learn Tables<small>1 to 10, fun and easy</small></button>
     <button class="tile" onclick="openIndia()"><span class="e">🗺️</span>Explore India<small>States, capitals and map</small></button>
   </div>
 </section>
@@ -165,8 +190,13 @@ svg{width:100%;max-width:420px;height:auto}
   <div class="grid" id="lvGrid"></div>
 </section>
 
+<section id="tables" class="view">
+  <div class="bar"><button class="back" onclick="tStop();show('home')">🏠 Home</button><button class="back" onclick="tPick()">🔢 All tables</button><button class="back" id="taud" onclick="toggleAuto()">🔊 Sound: ON</button></div>
+  <div id="tb"></div>
+</section>
+
 <section id="flash" class="view">
-  <div class="bar"><button class="back" onclick="show('levels')">⬅ Levels</button><button class="back" onclick="show('home')">🏠 Home</button></div>
+  <div class="bar"><button class="back" onclick="show('levels')">⬅ Levels</button><button class="back" onclick="toggleFS()">⛶ Full screen</button><button class="back" onclick="show('home')">🏠 Home</button></div>
   <h2 id="ft" style="text-align:center"></h2>
   <p class="sub" id="fcnt" style="text-align:center"></p>
   <div class="prog"><div id="pb"></div></div>
@@ -433,7 +463,7 @@ function renderSide(){
 function nextItem(){if(items.length>1){sel=(sel+1)%items.length;renderSide();renderMain()}}
 function sayItem(e){e.stopPropagation();say(items[sel][1],'en-IN')}
 let autoSound=true;
-function toggleAuto(){autoSound=!autoSound;const b=$('aud');b.textContent=autoSound?'🔊 Sound: ON':'🔇 Sound: OFF';b.classList.toggle('off',!autoSound);if(!autoSound){try{speechSynthesis.cancel()}catch(e){}}}
+function toggleAuto(){autoSound=!autoSound;const b=$('aud');b.textContent=autoSound?'🔊 Sound: ON':'🔇 Sound: OFF';b.classList.toggle('off',!autoSound);$('taud').textContent=b.textContent;if(!autoSound){try{speechSynthesis.cancel()}catch(e){}}}
 function renderMain(){
   const x=items[sel];if(x&&autoSound)say(x[1],'en-IN');
   if(!x){$('main').innerHTML='<div class="big">🧊</div><p class="nm">Antarctica</p><p class="note">Brrr! No countries live here. Only penguins and scientists! 🐧</p>';return}
@@ -543,7 +573,7 @@ function openL(k){fk=k;ALL=wordsFor(k);$('lvt').textContent=LG[k][0]+' – choos
 function openLv(i){lvl=i;const[lo,hi]=LV(fk)[i];W=ALL.filter(w=>len(w)>=lo&&len(w)<=hi);fi=0;$('ft').textContent=LG[fk][0]+' · '+LN[i][1]+' · '+LN[i][2];$('jump').max=W.length;show('flash');drawF()}
 function drawF(){
   const w=W[fi];$('fcnt').textContent=`Word ${fi+1} of ${W.length} · ${len(w)} letter${len(w)>1?'s':''}`;$('pb').style.width=((fi+1)/W.length*100)+'%';
-  $('fc').innerHTML=`<p class="word" style="font-size:min(340px,${(92/([...w].length*.6)).toFixed(1)}vw)">${w}</p><button class="spk" onclick="event.stopPropagation();say(W[fi],LG[fk][2])">🔊 Listen</button><div class="hint">Tap anywhere or press → for next, ← for previous</div>`;
+  $('fc').innerHTML=`<p class="word" style="font-size:min(var(--cap,340px),${(92/([...w].length*.6)).toFixed(1)}vw)">${w}</p><button class="spk" onclick="event.stopPropagation();say(W[fi],LG[fk][2])">🔊 Listen</button><div class="hint">Tap anywhere or press → for next, ← for previous</div><button class="xfs" onclick="event.stopPropagation();toggleFS(false)">✕</button>`;
 }
 function boom(e){const em=['⭐','🎈','🎉','🌟','🦋','🌈','🎊','🚀'];for(let i=0;i<26;i++){const s=document.createElement('span');s.className='p';s.textContent=em[i%em.length];const a=Math.random()*6.28,d=90+Math.random()*190;s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';s.style.setProperty('--dx',Math.cos(a)*d+'px');s.style.setProperty('--dy',Math.sin(a)*d+'px');document.body.appendChild(s);setTimeout(()=>s.remove(),1200)}}
 (function(){
@@ -560,7 +590,33 @@ function tick(){const n=new Date(),o={timeZone:'Asia/Kolkata'};
   const h=+n.toLocaleString('en-GB',{...o,hour:'2-digit',hour12:false})%24;
   $('cgreet').textContent=(h<5?'🌙 Sleepy night':h<12?'🌅 Good morning':h<17?'☀️ Good afternoon':h<20?'🌇 Good evening':'🌙 Good night')+' from PUNE, INDIA 🇮🇳'}
 tick();setInterval(tick,1000);
-document.addEventListener('keydown',e=>{if(!$('flash').classList.contains('on')||e.target.tagName==='INPUT'||e.ctrlKey||e.metaKey||e.altKey)return;if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();stepF(1)}else if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();stepF(-1)}});
+function toggleFS(on){const c=$('fc');on=on===undefined?!c.classList.contains('fsm'):on;c.classList.toggle('fsm',on);document.body.style.overflow=on?'hidden':'';try{if(on&&document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();else if(!on&&document.fullscreenElement)document.exitFullscreen()}catch(e){}}
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&$('fc').classList.contains('fsm'))toggleFS(false)});
+/* tables */
+const TE=['🍎','🐱','⭐','🎈','🍓','🐶','🦋','🌸','🍪','🐘'],TC=['#7c4dff','#ff7a2f','#22c55e','#ff4f9a','#1e9bff','#f5a400','#14b8a6','#ef4444','#8b5cf6','#06b6d4'];
+let ST={};try{ST=JSON.parse(localStorage.getItem('tbl')||'{}')}catch(e){}
+const T={n:1,i:1,q:[],qi:0,s:0,mode:'',tm:0};
+const rnd=n=>1+Math.floor(Math.random()*n),shuf=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]),TS=(n,k)=>`${n} times ${k} is ${n*k}`;
+function tStop(){clearInterval(T.tm);T.tm=0}
+function openTables(){show('tables');tPick()}
+function tPick(){tStop();T.mode='';$('tb').innerHTML=`<h2>Pick a table 🔢</h2><p class='sub'>Tap a number to learn its table!</p><div class='nums'>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button class='nb' style='background:${TC[n-1]}' onclick='tOpen(${n})'>${n}${ST[n]?'<small>'+'⭐'.repeat(ST[n]>=9?3:ST[n]>=7?2:1)+'</small>':''}</button>`).join('')}</div><button class='btn' onclick='tOpen(0)'>🎲 Mixed test (all tables)</button>`}
+function tOpen(n){T.n=n;if(n)tLearn(1);else qStart('test')}
+function tabs(){const m=T.mode,c=x=>m===x?'on':'';return `<h2 style='text-align:center;color:${TC[T.n-1]}'>Table of ${T.n}</h2><div class='tabs'><button class='${c('learn')}' onclick='tLearn(1)'>📖 Learn</button><button class='${c('prac')}' onclick='qStart("prac")'>🎯 Practice</button><button class='${c('test')}' onclick='qStart("test")'>🏆 Test</button></div>`}
+function vis(n,k){return `<div class='grp'>${Array.from({length:k},()=>`<div class='gb'>${TE[n-1].repeat(n)}</div>`).join('')}</div>`}
+function tSay(){say(TS(T.n,T.i),'en-IN')}
+function tLearn(i,keep){if(!keep)tStop();T.mode='learn';T.i=i;const n=T.n;$('tb').innerHTML=`${tabs()}<div class='lcard' style='border-color:${TC[n-1]}'><div class='eq'>${n} × ${i} = <b style='color:${TC[n-1]}'>${n*i}</b></div><p class='sub'>${i} group${i>1?'s':''} of ${n} ${TE[n-1]}</p>${vis(n,i)}<div class='ctl'><button class='btn o' onclick='tLearn(${i>1?i-1:10})'>⬅</button><button class='btn' onclick='tSay()'>🔊 Say it</button><button class='btn o' onclick='tLearn(${i<10?i+1:1})'>➡</button></div><button class='back' style='margin-top:12px' onclick='tSing()'>▶ Sing the whole table</button></div><div class='tl'>${Array.from({length:10},(_,j)=>`<button class='${j+1===i?'on':''}' onclick='tLearn(${j+1})'>${n} × ${j+1} = ${n*(j+1)}</button>`).join('')}</div>`;if(autoSound||keep)tSay()}
+function tSing(){tStop();let i=1;tLearn(1,1);T.tm=setInterval(()=>{i++;if(i>10){tStop();return}tLearn(i,1)},3300)}
+function qStart(m){tStop();T.mode=m;T.qi=0;T.s=0;T.q=T.n?shuf([1,2,3,4,5,6,7,8,9,10]).map(k=>[T.n,k]):Array.from({length:10},()=>[rnd(10),rnd(10)]);qShow()}
+function qShow(){const q=T.q[T.qi];if(!q)return qEnd();const[n,k]=q,p=n*k;let o=[p];for(const c of shuf([p+n,p-n,p+k,p-k,p+1,p-1,p+2,p+10])){if(c>0&&!o.includes(c))o.push(c);if(o.length>2)break}o=shuf(o);
+  $('tb').innerHTML=`${T.n?tabs():"<h2 style='text-align:center'>🎲 Mixed test</h2>"}<p class='sub' style='text-align:center'>Question ${T.qi+1} of 10 · ⭐ ${T.s}</p><div class='lcard'><div class='eq'>${n} × ${k} = <b>?</b></div>${T.mode==='prac'?vis(n,k):''}<div class='opts'>${o.map(v=>`<button class='opt' onclick='qAns(this,${v})'>${v}</button>`).join('')}</div><p class='fb' id='fb'></p></div>`;if(autoSound)say(`${n} times ${k}`,'en-IN')}
+function qAns(b,v){const[n,k]=T.q[T.qi],p=n*k,pr=T.mode==='prac',nx=()=>{T.qi++;qShow()},lock=()=>{document.querySelector('.opts').style.pointerEvents='none'};
+  if(v===p){T.s++;lock();b.classList.add('good');$('fb').textContent=['Yes! 🎉','Super! ⭐','Great job! 👏','Awesome! 🌟'][rnd(4)-1];if(autoSound)say(TS(n,k),'en-IN');setTimeout(nx,1600)}
+  else if(pr){b.classList.add('bad');b.disabled=true;$('fb').textContent='Oops, try again 💪'}
+  else{lock();b.classList.add('bad');$('fb').textContent=`It is ${p} 🙂`;setTimeout(nx,1600)}}
+function qEnd(){const t=T.mode==='test',s=T.s,st=s>=9?3:s>=7?2:s>=4?1:0;
+  if(t&&T.n&&s>(ST[T.n]||0)){ST[T.n]=s;try{localStorage.setItem('tbl',JSON.stringify(ST))}catch(e){}}
+  $('tb').innerHTML=`${T.n?tabs():''}<div class='lcard'><div class='big' style='font-size:90px'>${t?(st?'🏆':'💪'):'🎉'}</div><h2>${t?`You got ${s} out of 10!`:`You finished table ${T.n}!`}</h2><div class='eq'>${t?('⭐'.repeat(st)||'🙂'):'⭐⭐⭐'}</div><p class='sub'>${t?(s>=9?'Table master! 👑':'Practise a little more and try again!'):'Now try the Test!'}</p><div class='ctl'><button class='btn' onclick='qStart("${T.mode}")'>🔁 Again</button><button class='btn o' onclick='tPick()'>🔢 Other tables</button></div></div>`;if(!t||s>=7)boom({clientX:innerWidth/2,clientY:innerHeight/3})}
+document.addEventListener('keydown',e=>{if(!$('flash').classList.contains('on')||e.target.tagName==='INPUT'||e.ctrlKey||e.metaKey||e.altKey)return;if(e.key==='Escape')toggleFS(false);else if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();stepF(1)}else if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();stepF(-1)}});
 function stepF(d){fi=(fi+d+W.length)%W.length;drawF()}
 function jumpF(v){v=Math.max(1,Math.min(W.length,+v||1));fi=v-1;drawF()}
 </script>
